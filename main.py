@@ -1,0 +1,66 @@
+from models import BudgetManager, ReportGenerator,Transaction
+
+if __name__ == "__main__":
+    manager =BudgetManager()
+    report =ReportGenerator(manager)
+
+    while True:
+        print("\n*****Bütçe Takip Menüsü *****")
+        print("1-İşlem ekle")
+        print("2-İşlemleri Listele")
+        print("3-Kategori Raporu")
+        print("4-Özet Rapor")
+        print("5-İşlem Ara")
+        print("6-İşlem Sil")
+        print("7-Çıkış")
+
+        choie =input("Seçiminizi girin :")
+
+        if choie == "1":
+            amount =float(input("Miktar : "))
+            category = input("Kategori : ")
+            type_ =input("Tür(Gelir/Gider) : ")
+            date = input("Tarih (YYYY-AA-GG) : ")
+            t=Transaction(amount,category,type_,date)
+            manager.add_transaction(t)
+            print("İşlem eklendi.")
+
+        elif choie == "2":
+            for i, t in enumerate(manager.transactions):
+                print(f"{i}. {t}")
+
+        elif choie == "3":
+            print(report.category_report())
+
+        elif choie == "4":
+            print(manager.summary())
+
+        elif choie == "5":
+            keyword = input("Arama anahtar kelimesi (kategori/tarih): ")
+            results = manager.search_transaction(keyword)
+            if results :
+                for r in results:
+                    print(r)
+            else:
+                print("Hiçbir işlem bulunamadı.")
+
+        elif choie == "6":
+            for i,t in enumerate(manager.transactions):
+                print(f"{i}. {t}")
+            index =int(input("Silmek istediğiniz işlem numarsını girin:"))
+            if manager.delete_transaction(index):
+                 print("İşlem silindi.")
+            else:
+                print("Geçersiz numara.")
+
+        elif choie == "7":
+            print("Programdan çıkılıyor...")
+            break
+
+        else:
+            print("Geçersiz seçim, tekrar deneyiniz.")
+
+        secim = input("\nAna menüye dönmek için Enter’a basın, çıkış için Q yazın: ")
+        if secim.lower() == "q":
+            print("Programdan çıkılıyor...")
+            break
