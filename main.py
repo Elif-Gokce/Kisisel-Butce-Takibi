@@ -18,14 +18,25 @@ if __name__ == "__main__":
         choice =input("Seçiminizi girin :")
 
         if choice == "1":
-            amount =float(input("Miktar : "))
-            category = input("Kategori : ")
-            type_ =input("Tür(Gelir/Gider) : ").capitalize()
+            try:
+                amount = float(input("Miktar : "))
+            except ValueError:
+                print(" Miktar sayısal olmalı!")
+                continue  
+
+            category = input("Kategori : ").strip()
+            if not category:
+                print(" Kategori boş olamaz.")
+                continue
+
+            type_ = input("Tür(Gelir/Gider) : ").capitalize()
             date = input("Tarih (YYYY-AA-GG) : ")
-            t=Transaction(amount,category,type_,date)
+
+            t = Transaction(amount, category, type_, date)
             manager.add_transaction(t)
-            manager.save_to_file()              
-            print("İşlem eklendi.")
+            manager.save_to_file()
+            print("✅ İşlem eklendi.")
+       
 
         elif choice == "2":
             for i, t in enumerate(manager.transactions):
