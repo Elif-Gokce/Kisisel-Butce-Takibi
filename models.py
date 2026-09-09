@@ -84,9 +84,14 @@ class BudgetManager:
         return False
            
     def save_to_file(self, filename="data/data.json"): #verileri JSON dosyasına yazar
-        with open(filename, "w", encoding="utf-8") as f:
-            json.dump([t.to_dict() for t in self.transactions], f, ensure_ascii=False, indent=4)
+        try:
+            with open(filename, "w", encoding="utf-8") as f:
+                json.dump([t.to_dict() for t in self.transactions], f, ensure_ascii=False, indent=4)
+        except Exception as e:
+            print(f" Dosya kaydedilirken hata oluştu: {e}")
 
+
+        
     def load_from_file(self, filename="data/data.json"): #JSON dosyasından okur ve nesnelere çevirir
         try:
             with open(filename, "r", encoding="utf-8") as f:
