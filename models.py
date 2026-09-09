@@ -1,3 +1,5 @@
+import json
+
 #İşlemleri tutan sınıf
 class Transaction:
     def __init__(self,amount,category,type,date):
@@ -72,6 +74,26 @@ class BudgetManager:
             self.categories[removed.category].transactions.remove(removed)
             return True
         return False
+
+    def save_to_file(self, filename="data.json"): #verileri JSON dosyasına yazar
+        with open(filename, "w", encoding="utf-8") as f:
+            json.dump([t.to_dict() for t in self.transactions], f, ensure_ascii=False, indent=4)
+
+    def load_from_file(self, filename="data.json"): #JSON dosyasından okur ve nesnelere çevirir
+        try:
+            with open(filename, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                self.transactions = [Transaction.from_dict(d) for d in data]
+
+                # Kategorileri yeniden oluştur
+                self.categories = {}
+                for t in self.transactions:
+                    if t.category not in self.categories:
+                        self.categories[t.category] = Category(t.category)
+                    self.categories[t.category].add_transaction(t)
+        except FileNotFoundError:
+            self.transactions = []
+            self.categories = {}
 
 #Rapor üretici sınıf (Kategori bazlı özet)
 class ReportGenerator:
