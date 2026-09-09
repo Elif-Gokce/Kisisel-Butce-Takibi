@@ -2,6 +2,7 @@ from models import BudgetManager, ReportGenerator,Transaction
 
 if __name__ == "__main__":
     manager =BudgetManager()
+    manager.load_from_file()                # Program açılırken verileri yükle
     report =ReportGenerator(manager)
 
     while True:
@@ -23,6 +24,7 @@ if __name__ == "__main__":
             date = input("Tarih (YYYY-AA-GG) : ")
             t=Transaction(amount,category,type_,date)
             manager.add_transaction(t)
+            manager.save_to_file()              
             print("İşlem eklendi.")
 
         elif choie == "2":
@@ -36,7 +38,7 @@ if __name__ == "__main__":
             print(manager.summary())
 
         elif choie == "5":
-            keyword = input("Arama anahtar kelimesi (kategori/tarih/tür/miktar): ")
+            keyword = input("Aramak istediğiniz kelimeyi girin: (kategori/tarih/tür/miktar): ")
             results = manager.search_transaction(keyword)
             if results :
                 for r in results:
@@ -49,11 +51,13 @@ if __name__ == "__main__":
                 print(f"{i}. {t}")
             index =int(input("Silmek istediğiniz işlem numarsını girin:"))
             if manager.delete_transaction(index):
+                 manager.save_to_file()
                  print("İşlem silindi.")
             else:
                 print("Geçersiz numara.")
 
         elif choie == "7":
+            manager.save_to_file()
             print("Programdan çıkılıyor...")
             break
 
