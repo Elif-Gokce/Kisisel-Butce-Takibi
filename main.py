@@ -17,6 +17,11 @@ if __name__ == "__main__":
 
         choice =input("Seçiminizi girin :")
 
+        if choice not in ["1","2","3","4","5","6","7"]:
+            print(" Geçersiz seçim, lütfen 1-7 arasında bir değer girin.")
+            continue
+
+
         if choice == "1":
             try:
                 amount = float(input("Miktar : "))
@@ -30,12 +35,19 @@ if __name__ == "__main__":
                 continue
 
             type_ = input("Tür(Gelir/Gider) : ").capitalize()
+
+            from datetime import datetime
             date = input("Tarih (YYYY-AA-GG) : ")
+            try:
+                datetime.strptime(date, "%Y-%m-%d")
+            except ValueError:
+                print(" Tarih formatı yanlış! Örn: 2026-09-10")
+                continue
 
             t = Transaction(amount, category, type_, date)
             manager.add_transaction(t)
             manager.save_to_file()
-            print("✅ İşlem eklendi.")
+            print("İşlem eklendi.")
        
 
         elif choice == "2":
