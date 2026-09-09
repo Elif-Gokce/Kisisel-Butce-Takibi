@@ -59,13 +59,19 @@ class BudgetManager:
         return f"Gelir : {total_income} TL | Gider : {total_expense} TL | Bakiye : {balance} TL"
 
     def search_transaction(self, keyword):      #Arama yapan fonk.
-        return [
-            t for t in self.transactions
-            if keyword.lower() in t.category.lower()             # kategoriye göre arama
-            or keyword in t.date                                 # tarihe göre arama
-            or keyword.lower() in t.type.lower()                 # tür (Gelir/Gider) arama
-            or keyword.isdigit() and float(keyword) == t.amount  # miktar arama
-        ]
+        keyword = keyword.strip()
+        if not keyword:
+            print(" Arama kriteri boş olamaz.")
+            return []
+
+        results = []
+        for t in self.transactions:
+            if (keyword.lower() in t.category.lower() or            # kategoriye göre arama               
+                keyword in t.date or                                # tarihe göre arama
+                keyword.lower() in t.type.lower() or                # tür (Gelir/Gider) arama
+                keyword in str(t.amount)):                          # miktar arama
+                results.append(t)
+        return results
 
     def delete_transaction(self,index):         #Silme yapan fonk.
         if 0 <= index < len(self.transactions):
@@ -130,3 +136,4 @@ class ReportGenerator:
         for name,category in self.manager.categories.items():
             report+=f"-{name} : {category.total_amount()} TL \n"
         return report    
+
