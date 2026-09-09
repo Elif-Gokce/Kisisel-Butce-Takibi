@@ -95,7 +95,13 @@ class BudgetManager:
     def load_from_file(self, filename="data/data.json"): #JSON dosyasından okur ve nesnelere çevirir
         try:
             with open(filename, "r", encoding="utf-8") as f:
-                data = json.load(f)
+                content = f.read().strip()
+                if not content:  
+                    print(" data.json dosyası boş, yeni veriyle başlanıyor.")
+                    self.transactions = []
+                    self.categories = {}
+                    return
+                data = json.loads(content)
                 self.transactions = [Transaction.from_dict(d) for d in data]
 
                 # Kategorileri yeniden oluştur
@@ -104,9 +110,15 @@ class BudgetManager:
                     if t.category not in self.categories:
                         self.categories[t.category] = Category(t.category)
                     self.categories[t.category].add_transaction(t)
+
         except FileNotFoundError:
+            print(" data.json bulunamadı, yeni dosya oluşturulacak.")
             self.transactions = []
             self.categories = {}
+        except json.JSONDecodeError:
+            print(" data.json bozuk, sıfırdan başlatılıyor.")
+            self.transactions = []
+            self.categories = {}  
 
 #Rapor üretici sınıf (Kategori bazlı özet)
 class ReportGenerator:
