@@ -69,17 +69,25 @@ class BudgetManager:
 
     def delete_transaction(self,index):         #Silme yapan fonk.
         if 0 <= index < len(self.transactions):
-            removed=self.transactions.pop(index)
+            transaction = self.transactions.pop(index)
 
-            self.categories[removed.category].transactions.remove(removed)
+            # Kategoriden de sil
+            if transaction.category in self.categories:
+                category = self.categories[transaction.category]
+                category.transactions.remove(transaction)
+
+                # Eğer kategori tamamen boşsa kategoriyi de sil
+                if not category.transactions:
+                    del self.categories[transaction.category]
+
             return True
         return False
-
-    def save_to_file(self, filename="data.json"): #verileri JSON dosyasına yazar
+           
+    def save_to_file(self, filename="data/data.json"): #verileri JSON dosyasına yazar
         with open(filename, "w", encoding="utf-8") as f:
             json.dump([t.to_dict() for t in self.transactions], f, ensure_ascii=False, indent=4)
 
-    def load_from_file(self, filename="data.json"): #JSON dosyasından okur ve nesnelere çevirir
+    def load_from_file(self, filename="data/data.json"): #JSON dosyasından okur ve nesnelere çevirir
         try:
             with open(filename, "r", encoding="utf-8") as f:
                 data = json.load(f)

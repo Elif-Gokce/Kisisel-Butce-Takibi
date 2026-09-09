@@ -2,7 +2,7 @@ from models import BudgetManager, ReportGenerator,Transaction
 
 if __name__ == "__main__":
     manager =BudgetManager()
-    manager.load_from_file()                # Program açılırken verileri yükle
+    manager.load_from_file()                
     report =ReportGenerator(manager)
 
     while True:
@@ -15,29 +15,29 @@ if __name__ == "__main__":
         print("6-İşlem Sil")
         print("7-Çıkış")
 
-        choie =input("Seçiminizi girin :")
+        choice =input("Seçiminizi girin :")
 
-        if choie == "1":
+        if choice == "1":
             amount =float(input("Miktar : "))
             category = input("Kategori : ")
-            type_ =input("Tür(Gelir/Gider) : ")
+            type_ =input("Tür(Gelir/Gider) : ").capitalize()
             date = input("Tarih (YYYY-AA-GG) : ")
             t=Transaction(amount,category,type_,date)
             manager.add_transaction(t)
             manager.save_to_file()              
             print("İşlem eklendi.")
 
-        elif choie == "2":
+        elif choice == "2":
             for i, t in enumerate(manager.transactions):
                 print(f"{i}. {t}")
 
-        elif choie == "3":
+        elif choice == "3":
             print(report.category_report())
 
-        elif choie == "4":
+        elif choice == "4":
             print(manager.summary())
 
-        elif choie == "5":
+        elif choice == "5":
             keyword = input("Aramak istediğiniz kelimeyi girin: (kategori/tarih/tür/miktar): ")
             results = manager.search_transaction(keyword)
             if results :
@@ -46,7 +46,7 @@ if __name__ == "__main__":
             else:
                 print("Hiçbir işlem bulunamadı.")
 
-        elif choie == "6":
+        elif choice == "6":
             for i,t in enumerate(manager.transactions):
                 print(f"{i}. {t}")
             index =int(input("Silmek istediğiniz işlem numarsını girin:"))
@@ -56,7 +56,7 @@ if __name__ == "__main__":
             else:
                 print("Geçersiz numara.")
 
-        elif choie == "7":
+        elif choice == "7":
             manager.save_to_file()
             print("Programdan çıkılıyor...")
             break
