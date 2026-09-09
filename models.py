@@ -6,6 +6,23 @@ class Transaction:
         self.type = type         #Türü
         self.date = date         #Tarih
 
+    def to_dict(self):           #nesneyi JSON’a uygun hale getirir
+        return {
+            "amount":self.amount,
+            "category":self.category,
+            "type":self.type,
+            "date":self.date
+        }
+
+    @staticmethod                 #nesneye (self) ihtiyaç duymayan fonksiyonlarda kullanılır
+    def from_dict(data):          #JSON’dan nesne oluşturur 
+        return Transaction(
+            data["amount"],
+            data["category"],
+            data["type"],
+            data["date"]
+        )
+
     def __str__(self):
         return f"{self.date} - {self.category} ({self.type}): {self.amount} TL"
 

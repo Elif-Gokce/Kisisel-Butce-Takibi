@@ -36,7 +36,7 @@ if __name__ == "__main__":
             print(manager.summary())
 
         elif choie == "5":
-            keyword = input("Arama anahtar kelimesi (kategori/tarih): ")
+            keyword = input("Arama anahtar kelimesi (kategori/tarih/tür/miktar): ")
             results = manager.search_transaction(keyword)
             if results :
                 for r in results:
