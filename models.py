@@ -53,10 +53,17 @@ class BudgetManager:
         self.categories[transaction.category].add_transaction(transaction)
 
     def summary(self):                          #Özet rapor döndüren fonk.
+        total = len(self.transactions)
         total_income =sum(t.amount for t in self.transactions if t.type == "Gelir")
         total_expense =sum(t.amount for t in self.transactions if t.type == "Gider")
         balance=total_income-total_expense
-        return f"Gelir : {total_income} TL | Gider : {total_expense} TL | Bakiye : {balance} TL"
+
+        return (
+        f" Toplam işlem sayısı: {total}\n"
+        f" Toplam Gelir: {total_income}\n"
+        f" Toplam Gider: {total_expense}\n"
+        f" Bakiye: {balance}"
+    )
 
     def search_transaction(self, keyword):      #Arama yapan fonk.
         keyword = keyword.strip()
