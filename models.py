@@ -126,6 +126,29 @@ class BudgetManager:
             self.transactions = []
             self.categories = {}  
 
+    def update_transaction(self, index, new_transaction):
+        if 0 <= index < len(self.transactions):
+            old_transaction = self.transactions[index]
+
+            # Eski kategoriden çıkar
+            if old_transaction.category in self.categories:
+                category = self.categories[old_transaction.category]
+                category.transactions.remove(old_transaction)
+                if not category.transactions:
+                    del self.categories[old_transaction.category]
+
+            # Yeni işlemi ekle
+            self.transactions[index] = new_transaction
+            if new_transaction.category not in self.categories:
+                self.categories[new_transaction.category] = Category(new_transaction.category)
+            self.categories[new_transaction.category].add_transaction(new_transaction)
+            return True
+        return False
+
+
+   
+
+
 #Rapor üretici sınıf (Kategori bazlı özet)
 class ReportGenerator:
     def __init__(self,manager):

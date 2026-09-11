@@ -12,14 +12,15 @@ if __name__ == "__main__":
             print("2-İşlemleri Listele")
             print("3-Kategori Raporu")
             print("4-Özet Rapor")
-            print("5-İşlem Ara")
-            print("6-İşlem Sil")
-            print("7-Çıkış")
+            print("5-İşlem Güncelle")
+            print("6-İşlem Ara")
+            print("7-İşlem Sil")
+            print("8-Çıkış")
 
-            choice =input("Seçiminizi girin :")
+            choice =input("Seçiminizi girin :").strip()
 
-            if choice not in ["1","2","3","4","5","6","7"]:
-                print(" Geçersiz seçim, lütfen 1-7 arasında bir değer girin.")
+            if choice not in ["1","2","3","4","5","6","7","8"]:
+                print(" Geçersiz seçim, lütfen 1-8 arasında bir değer girin.")
                 continue
 
 
@@ -62,6 +63,47 @@ if __name__ == "__main__":
                 print(manager.summary())
 
             elif choice == "5":
+                for i, t in enumerate(manager.transactions):
+                    print(f"{i}. {t}")
+
+                try:
+                    index = int(input("Güncellemek istediğiniz işlem numarasını girin: "))
+                    if not (0 <= index < len(manager.transactions)):
+                        print(" Geçersiz numara.")
+                        continue
+                except ValueError:
+                    print(" Lütfen sayı girin.")
+                    continue
+
+                try:
+                    amount = float(input("Yeni miktar : "))
+                except ValueError:
+                    print(" Miktar sayısal olmalı!")
+                    continue  
+
+                category = input("Yeni kategori : ").strip()
+                if not category:
+                    print(" Kategori boş olamaz.")
+                    continue
+
+                type_ = input("Yeni tür (Gelir/Gider) : ").capitalize()
+
+                from datetime import datetime
+                date = input("Yeni tarih (YYYY-AA-GG) : ")
+                try:
+                    datetime.strptime(date, "%Y-%m-%d")
+                except ValueError:
+                    print(" Tarih formatı yanlış! Örn: 2026-09-10")
+                    continue
+
+                new_t = Transaction(amount, category, type_, date)
+                if manager.update_transaction(index, new_t):
+                    manager.save_to_file()
+                    print(" İşlem güncellendi.")
+                else:
+                    print(" Güncelleme başarısız.")
+
+            elif choice == "6":
                 keyword = input("Aramak istediğiniz kelimeyi girin: (kategori/tarih/tür/miktar): ")
                 results = manager.search_transaction(keyword)
                 if results :
@@ -70,7 +112,7 @@ if __name__ == "__main__":
                 else:
                     print("Hiçbir işlem bulunamadı.")
 
-            elif choice == "6":
+            elif choice == "7":
                 for i, t in enumerate(manager.transactions):
                     print(f"{i}. {t}")
 
@@ -89,7 +131,7 @@ if __name__ == "__main__":
                 else:
                     print(" Silme başarısız.")                            
 
-            elif choice == "7":
+            elif choice == "8":
                 manager.save_to_file()
                 print("Programdan çıkılıyor...")
                 break
