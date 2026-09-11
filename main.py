@@ -7,7 +7,9 @@ if __name__ == "__main__":
 
     while True:
         try:
-            print("\n*****Bütçe Takip Menüsü *****")
+            print("\n********************************")
+            print("*      Bütçe Takip Menüsü      *")
+            print("********************************")
             print("1-İşlem ekle")
             print("2-İşlemleri Listele")
             print("3-Kategori Raporu")
@@ -17,12 +19,16 @@ if __name__ == "__main__":
             print("7-İşlem Sil")
             print("8-Çıkış")
 
+            print("********************************")
             choice =input("Seçiminizi girin :").strip()
 
+            print("********************************")
+            
             if choice not in ["1","2","3","4","5","6","7","8"]:
                 print(" Geçersiz seçim, lütfen 1-8 arasında bir değer girin.")
                 continue
 
+           
 
             if choice == "1":
                 try:
