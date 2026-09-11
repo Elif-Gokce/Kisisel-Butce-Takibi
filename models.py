@@ -40,6 +40,12 @@ class Category:
     def total_amount(self):                    #Toplam miktarı dönderen fonk.
         return sum(t.amount for t in self.transactions)
 
+    def total_income(self):                     #Gelir toplayan fonk. 
+        return sum(t.amount for t in self.transactions if t.type == "Gelir")
+
+    def total_expense(self):                    #Gider toplayan fonk.
+        return sum(t.amount for t in self.transactions if t.type == "Gider")  
+
 #Projeyi yöneten sınıf
 class BudgetManager:
     def __init__(self):
@@ -47,6 +53,9 @@ class BudgetManager:
         self.categories={}      #Kategorileri saklayan sözlük
 
     def add_transaction(self,transaction):     #Yeni işlem ekleme fonk.
+        if transaction.type not in ["Gelir", "Gider"]:
+            raise ValueError("Tür sadece 'Gelir' veya 'Gider' olabilir.")
+        
         self.transactions.append(transaction)
         if transaction.category not in self.categories:
             self.categories[transaction.category]  =Category(transaction.category)
@@ -152,18 +161,17 @@ class BudgetManager:
             return True
         return False
 
-
-   
-
-
 #Rapor üretici sınıf (Kategori bazlı özet)
 class ReportGenerator:
     def __init__(self,manager):
          self.manager=manager # BudgetManager nesnesini alır, onun verilerini kullanır
 
     def category_report(self):
-        report ="Kategori Bazli Rapor : \n" 
-        for name,category in self.manager.categories.items():
-            report+=f"-{name} : {category.total_amount()} TL \n"
-        return report    
+        report = "Kategori Bazlı Rapor:\n"
+        for name, category in self.manager.categories.items():
+            report += (f"- {name}: Gelir {category.total_income()} TL, "
+                    f"Gider {category.total_expense()} TL, "
+                    f"Net {category.total_income() - category.total_expense()} TL\n")
+        return report
+
 
